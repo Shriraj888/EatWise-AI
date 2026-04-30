@@ -1,0 +1,8 @@
+/* App.css — EatWise AI (intentionally minimal; most styles are in index.css and page-level CSS) */
+
+/* Ensure the layout wrapper occupies full height */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}

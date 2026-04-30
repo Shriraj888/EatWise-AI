@@ -1,0 +1,91 @@
+.onboarding-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: var(--space-8) var(--space-5);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative large gradient orb behind card */
+.onboarding-wrapper::before {
+  content: '';
+  position: absolute;
+  width: 60vw;
+  height: 60vw;
+  background: var(--gradient-main);
+  border-radius: 50%;
+  filter: blur(180px);
+  opacity: 0.08;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.onboarding-step {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  position: relative;
+  z-index: 1;
+}
+
+.onboarding-header {
+  text-align: center;
+}
+
+.onboarding-header h1 {
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-2);
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.onboarding-header p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  max-width: 360px;
+  margin: 0 auto;
+  line-height: var(--line-height-relaxed);
+}
+
+.floating-card {
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+.floating-card .form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.floating-card .input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 640px) {
+  .floating-card .input-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mt-4 {
+  margin-top: var(--space-3);
+}

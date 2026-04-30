@@ -1,0 +1,318 @@
+.meal-log-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Date Selector ── */
+.date-selector-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.current-date-title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-display);
+  min-width: 210px;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+/* ── Main Grid ── */
+.meal-log-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+@media (min-width: 900px) {
+  .meal-log-grid {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-8));
+}
+
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Summary Card ── */
+.summary-card {
+  overflow: hidden;
+}
+
+.summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary-calorie-block {
+  text-align: center;
+  padding: var(--space-5);
+  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-accent-bg));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-calorie-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-glow);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.summary-cal-label {
+  display: block;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.summary-cal-value {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-black);
+  font-family: var(--font-display);
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  display: block;
+}
+
+.summary-cal-goal {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+  display: block;
+}
+
+.summary-macros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.micro-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-3) var(--space-2);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s;
+}
+
+.micro-stat:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-elevated);
+}
+
+.micro-stat-label {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-1);
+}
+
+.micro-stat-value {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-display);
+}
+
+.micro-stat.protein .micro-stat-value { color: var(--color-protein); }
+.micro-stat.carbs   .micro-stat-value { color: var(--color-carbs); }
+.micro-stat.fat     .micro-stat-value { color: var(--color-fat); }
+
+.action-buttons-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ── Meals Detail List ── */
+.full-meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  border: 2px dashed var(--color-border);
+  gap: var(--space-3);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  opacity: 0.4;
+}
+
+.empty-state h3 {
+  font-size: var(--font-size-xl);
+  font-family: var(--font-display);
+}
+
+.empty-state p {
+  color: var(--color-text-secondary);
+  max-width: 300px;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ── Meal Detail Item ── */
+.meal-detail-item {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.22s var(--ease-smooth);
+}
+
+.meal-detail-item:hover {
+  background: var(--color-bg-elevated);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
+}
+
+.meal-icon-large {
+  font-size: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.meal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.meal-header-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.meal-header-main h4 {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-display);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meal-time-badge {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  background: var(--color-bg-tertiary);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.meal-macros-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.macro-chip {
+  font-size: var(--font-size-xs);
+  padding: 3px 8px;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.macro-chip.p { background: rgba(129, 140, 248, 0.12); color: var(--color-protein); }
+.macro-chip.c { background: rgba(251, 191, 36, 0.12);  color: var(--color-carbs); }
+.macro-chip.f { background: rgba(248, 113, 113, 0.12); color: var(--color-fat); }
+
+.meal-notes {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  margin: 0;
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-primary-glow);
+  line-height: var(--line-height-relaxed);
+}
+
+.meal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary);
+  transition: all 0.18s var(--ease-smooth);
+  border: 1px solid transparent;
+}
+
+.icon-btn:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+}
+
+.edit-btn:hover   { color: var(--color-info);   background: var(--color-info-bg); }
+.delete-btn:hover { color: var(--color-danger); background: var(--color-danger-bg); }

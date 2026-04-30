@@ -1,0 +1,177 @@
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 860px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Header ── */
+.profile-header {
+  text-align: center;
+  padding: var(--space-4) 0 var(--space-2);
+}
+
+.profile-header h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-2);
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* ── Layout ── */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .profile-content {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+/* ── Form Grid ── */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.form-section-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-text-tertiary);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: var(--space-1);
+}
+
+.form-actions {
+  margin-top: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Goals Card ── */
+.goals-card {
+  position: sticky;
+  top: calc(var(--navbar-height) + var(--space-6));
+}
+
+.goals-calorie-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-primary-bg), var(--color-accent-bg));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.goals-calorie-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.goals-calorie-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-black);
+  font-family: var(--font-display);
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.macro-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-4) var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.macro-stat::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.macro-stat.protein::before { background: var(--color-protein); }
+.macro-stat.carbs::before   { background: var(--color-carbs); }
+.macro-stat.fat::before     { background: var(--color-fat); }
+
+.macro-stat:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.macro-label {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-2);
+}
+
+.macro-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-display);
+}
+
+.macro-stat.protein .macro-value { color: var(--color-protein); }
+.macro-stat.carbs   .macro-value { color: var(--color-carbs); }
+.macro-stat.fat     .macro-value { color: var(--color-fat); }
+
+.goals-note {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  text-align: center;
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
