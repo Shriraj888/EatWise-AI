@@ -50,22 +50,31 @@ export const Navbar = () => {
     await supabase.auth.signOut();
   };
 
+  const [hoveredPath, setHoveredPath] = useState(null);
+
   return (
     <motion.nav 
       className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}
-      initial={{ y: -100, x: "-50%", opacity: 0 }}
-      animate={{ y: 0, x: "-50%", opacity: 1 }}
-      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", bounce: 0, duration: 0.8 }}
+      onMouseLeave={() => setHoveredPath(null)}
     >
       <div className="navbar-container">
         {/* Logo */}
         <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
           <motion.div 
             className="logo-icon-wrapper"
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
+            whileHover={{ scale: 1.08, rotate: 10 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
           >
-            <Sparkles size={20} className="logo-sparkle" />
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+            >
+              <Sparkles size={18} className="logo-sparkle" />
+            </motion.div>
           </motion.div>
           <span className="logo-text">EatWise<span className="logo-ai">AI</span></span>
         </NavLink>
@@ -80,24 +89,37 @@ export const Navbar = () => {
                 key={link.path} 
                 to={link.path} 
                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                onMouseEnter={() => setHoveredPath(link.path)}
               >
                 {({ isActive }) => (
                   <>
                     <motion.div
-                      whileHover={{ scale: 1.15, rotate: [0, -10, 10, -5, 5, 0] }}
+                      whileHover={{ scale: 1.15, rotate: 5 }}
                       whileTap={{ scale: 0.9 }}
-                      transition={{ duration: 0.4 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
                       style={{ display: 'flex', alignItems: 'center' }}
                     >
                       <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
                     </motion.div>
                     <span>{link.label}</span>
+                    
+                    {/* Active Underline Indicator */}
                     {isActive && (
                       <motion.div 
                         layoutId="nav-indicator" 
                         className="nav-indicator"
                         initial={false}
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                        transition={{ type: "spring", stiffness: 350, damping: 30, mass: 1 }}
+                      />
+                    )}
+                    
+                    {/* Magnetic Hover Background */}
+                    {hoveredPath === link.path && !isActive && (
+                      <motion.div 
+                        layoutId="nav-hover-bg" 
+                        className="nav-hover-bg"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
                   </>
@@ -113,16 +135,15 @@ export const Navbar = () => {
             className="theme-toggle" 
             onClick={toggleTheme} 
             aria-label="Toggle theme"
-            whileTap={{ scale: 0.85, rotate: 180 }}
-            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.85 }}
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={theme}
-                initial={{ y: -20, opacity: 0, rotate: -90 }}
-                animate={{ y: 0, opacity: 1, rotate: 0 }}
-                exit={{ y: 20, opacity: 0, rotate: 90 }}
-                transition={{ duration: 0.2 }}
+                initial={{ y: -20, opacity: 0, rotate: -180, scale: 0.5 }}
+                animate={{ y: 0, opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ y: 20, opacity: 0, rotate: 180, scale: 0.5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </motion.div>
@@ -133,18 +154,7 @@ export const Navbar = () => {
             className="logout-button desktop-only" 
             onClick={handleLogout} 
             aria-label="Log out"
-            style={{ 
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '8px'
-            }}
             whileTap={{ scale: 0.85 }}
-            whileHover={{ scale: 1.1, color: 'var(--color-danger, #ef4444)' }}
           >
             <LogOut size={18} />
           </motion.button>
