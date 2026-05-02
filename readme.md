@@ -244,3 +244,7 @@ Instead of local storage, user profiles, logs, and preferences are securely pers
 ## 📜 License
 
 This project is open-source and licensed under the [MIT License](https://opensource.org/licenses/MIT). You are free to use, modify, and distribute the code in accordance with the terms of the license.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

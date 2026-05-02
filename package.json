@@ -2,6 +2,7 @@
   "name": "eatwise-ai",
   "version": "1.0.0",
   "description": "An AI-powered nutrition tracker.",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
