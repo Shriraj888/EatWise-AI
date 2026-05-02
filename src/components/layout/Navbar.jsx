@@ -12,7 +12,6 @@ import {
   X,
   Moon,
   Sun,
-  Sparkles,
   LogOut
 } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
@@ -63,20 +62,14 @@ export const Navbar = () => {
       <div className="navbar-container">
         {/* Logo */}
         <NavLink to="/" className="navbar-logo" onClick={closeMenu}>
-          <motion.div 
-            className="logo-icon-wrapper"
-            whileHover={{ scale: 1.08, rotate: 10 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          <motion.span 
+            className="logo-text"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-            >
-              <Sparkles size={18} className="logo-sparkle" />
-            </motion.div>
-          </motion.div>
-          <span className="logo-text">EatWise<span className="logo-ai">AI</span></span>
+            EatWise<span className="logo-ai">AI.</span>
+          </motion.span>
         </NavLink>
 
         {/* Desktop Nav */}

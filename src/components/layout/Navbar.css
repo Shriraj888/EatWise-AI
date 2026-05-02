@@ -48,56 +48,36 @@
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
   text-decoration: none;
   flex-shrink: 0;
   margin-right: 24px;
 }
 
-.logo-icon-wrapper {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px var(--color-primary-glow);
-  position: relative;
-  overflow: hidden;
-}
-
-.logo-icon-wrapper::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(rgba(255,255,255,0.4), transparent, transparent);
-  transform: rotate(45deg);
-}
-
-.logo-sparkle {
-  color: white;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  z-index: 1;
-}
-
 .logo-text {
   font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 800;
+  font-size: 1.6rem;
+  font-weight: 900;
   color: var(--color-text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  display: flex;
+  align-items: baseline;
 }
 
 .logo-ai {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-primary));
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-left: 2px;
+  font-weight: 800;
+  animation: shine-gradient 4s linear infinite;
+}
+
+@keyframes shine-gradient {
+  to {
+    background-position: 200% center;
+  }
 }
 
 /* ── Desktop Nav Links ── */
