@@ -16,11 +16,13 @@ export const GOAL_TYPES = [
   { value: 'build', label: 'Build Muscle', calorieOffset: 300 },
 ];
 
+import { Coffee, Sandwich, Soup, Apple } from 'lucide-react';
+
 export const MEAL_TYPES = [
-  { value: 'breakfast', label: 'Breakfast', icon: '🌅' },
-  { value: 'lunch', label: 'Lunch', icon: '☀️' },
-  { value: 'dinner', label: 'Dinner', icon: '🌙' },
-  { value: 'snack', label: 'Snack', icon: '🍎' },
+  { value: 'breakfast', label: 'Breakfast', icon: Coffee, color: '#f59e0b' },
+  { value: 'lunch', label: 'Lunch', icon: Sandwich, color: '#f97316' },
+  { value: 'dinner', label: 'Dinner', icon: Soup, color: '#818cf8' },
+  { value: 'snack', label: 'Snack', icon: Apple, color: '#10b981' },
 ];
 
 export const HEALTH_BADGES = {

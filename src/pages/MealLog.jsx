@@ -125,6 +125,7 @@ const MealLog = () => {
                 meals.map(meal => {
                   const mealTypeInfo = MEAL_TYPES.find(m => m.value === meal.type) || MEAL_TYPES[3];
                   const badgeInfo = HEALTH_BADGES[meal.healthBadge?.toLowerCase()];
+                  const IconComp = mealTypeInfo.icon;
 
                   return (
                     <motion.div
@@ -133,7 +134,9 @@ const MealLog = () => {
                       key={meal.id}
                       className="meal-detail-item"
                     >
-                      <div className="meal-icon-large">{mealTypeInfo.icon}</div>
+                      <div className="meal-icon-large" style={{ color: mealTypeInfo.color }}>
+                        <IconComp size={32} strokeWidth={2.5} />
+                      </div>
                       <div className="meal-info">
                         <div className="meal-header-main">
                           <h4>{meal.name}</h4>
