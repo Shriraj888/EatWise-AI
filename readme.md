@@ -2,7 +2,7 @@
 
 EatWise AI is a client-side nutrition and wellness tracker built with React and Vite. It helps users create a profile, calculate daily nutrition goals, log meals, analyze meals with AI, generate recipe ideas from available ingredients, and monitor wellness signals aligned with UN Sustainable Development Goal 3: Good Health and Well-Being.
 
-The application utilizes Supabase for secure backend capabilities, authentication, and persistent database storage. It leverages Open Food Facts for nutritional search capabilities and utilizes Google Gemini or OpenRouter for AI-powered nutrition analysis, recipe generation, and daily wellness insights.
+The application utilizes Supabase for secure backend capabilities, authentication, and persistent database storage. It leverages Open Food Facts for nutritional search capabilities and utilizes Google Gemini 2.5 Flash via Google AI Studio as the primary AI provider, with OpenRouter configured as a fallback provider for AI-powered nutrition analysis, recipe generation, and daily wellness insights.
 
 ---
 
@@ -26,7 +26,7 @@ graph TD
 
     subgraph External APIs
         OFF[Open Food Facts API]
-        Gemini[Google Gemini API]
+        Gemini[Google Gemini 2.5 Flash API]
         OR[OpenRouter API]
     end
 
@@ -59,7 +59,7 @@ sequenceDiagram
 
     User->>UI: Uploads food photo / enters description
     UI->>AI: send payload (Base64 Image / Text)
-    note right of AI: Routes to Gemini (or OpenRouter fallback)
+    note right of AI: Routes to Gemini 2.5 Flash (or OpenRouter fallback)
     AI-->>UI: Returns detailed JSON (Macros, Calories, Health Score)
     UI-->>User: Displays Analysis Results & Suggestions
     
@@ -103,7 +103,7 @@ EatWise AI is directly aligned with the United Nations Sustainable Development G
 
 ### 🤖 AI Meal Analyzer
 - **Multi-modal Inputs:** Accepts both photographic images of a meal and detailed textual descriptions.
-- **Nutritional Demystification:** Harnesses AI (Gemini / OpenRouter) to estimate calorie counts and intricate macro ratios.
+- **Nutritional Demystification:** Harnesses AI (Gemini 2.5 Flash / OpenRouter) to estimate calorie counts and intricate macro ratios.
 - **Health Scoring:** Grades meals and provides a synthesized health score alongside specific health badges.
 - **Actionable Feedback:** Supplies tailored, human-readable suggestions explaining the tangible health impacts of the food scanned. Can add these interpreted meals directly into your local Meal Log.
 
@@ -137,8 +137,8 @@ EatWise AI is directly aligned with the United Nations Sustainable Development G
 - **Icons & UI:** Lucide React, React Hot Toast
 - **External Services:** 
   - Open Food Facts API
-  - Google Gemini API
-  - OpenRouter API
+  - Google Gemini 2.5 Flash API (Primary)
+  - OpenRouter API (Fallback Provider)
 
 ---
 
@@ -208,7 +208,7 @@ VITE_SUPABASE_ANON_KEY="your_supabase_anon_key"
 VITE_GEMINI_API_KEY="your_gemini_api_key_here"
 VITE_OPENROUTER_API_KEY="your_openrouter_api_key_here"
 ```
-*(Note: For AI, only one key is strictly required. If both are provided, Gemini serves as the primary and OpenRouter as the fallback).*
+*(Note: For AI, only one key is strictly required. If both are provided, Gemini 2.5 Flash serves as the primary and OpenRouter as the fallback).*
 
 ### Available Scripts
 
@@ -245,6 +245,3 @@ Instead of local storage, user profiles, logs, and preferences are securely pers
 
 This project is open-source and licensed under the [MIT License](https://opensource.org/licenses/MIT). You are free to use, modify, and distribute the code in accordance with the terms of the license.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

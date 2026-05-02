@@ -4,6 +4,14 @@
   gap: var(--space-6);
 }
 
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
 /* ── Date Selector ── */
 .date-selector-row {
   display: flex;

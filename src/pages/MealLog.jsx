@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Plus, Edit2, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Edit2, Trash2, RefreshCw } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardBody } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
@@ -27,6 +27,7 @@ const MealLog = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMeal, setEditingMeal] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const getMealsForDate = useAppStore((state) => state.getMealsForDate);
   const deleteMeal = useAppStore((state) => state.deleteMeal);
@@ -41,6 +42,14 @@ const MealLog = () => {
   const openAddModal  = () => { setEditingMeal(null); setIsModalOpen(true); };
   const openEditModal = (meal) => { setEditingMeal(meal); setIsModalOpen(true); };
   const handleDelete  = (mealId) => { if (window.confirm('Delete this meal?')) deleteMeal(mealId, dateStr); };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    // Simulate network/store refresh delay
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 600);
+  };
 
   return (
     <motion.div
@@ -104,13 +113,19 @@ const MealLog = () => {
           <Card className="meals-list-card">
             <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <CardTitle>Meals Logged</CardTitle>
-              <Badge variant="neutral">{meals.length} item{meals.length !== 1 ? 's' : ''}</Badge>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Button variant="ghost" onClick={handleRefresh} title="Refresh" disabled={isRefreshing}>
+                  <RefreshCw size={16} className={isRefreshing ? 'spin-icon' : ''} />
+                </Button>
+                <Badge variant="neutral">{meals.length} item{meals.length !== 1 ? 's' : ''}</Badge>
+              </div>
             </CardHeader>
             <motion.div
-              className="full-meals-list"
+              className={`full-meals-list ${isRefreshing ? 'refreshing' : ''}`}
               variants={containerVariants}
               initial="hidden"
               animate="show"
+              style={{ opacity: isRefreshing ? 0.5 : 1, pointerEvents: isRefreshing ? 'none' : 'auto', transition: 'opacity 0.2s' }}
             >
               {meals.length === 0 ? (
                 <motion.div variants={itemVariants} className="empty-state">
