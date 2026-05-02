@@ -12,10 +12,12 @@ import {
   X,
   Moon,
   Sun,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 import { NAV_LINKS } from '../../utils/constants';
+import { supabase } from '../../utils/supabase';
 import './Navbar.css';
 
 const ICON_MAP = {
@@ -43,6 +45,10 @@ export const Navbar = () => {
 
   // Close mobile menu on route change
   useEffect(() => { setIsOpen(false); }, [location.pathname]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <motion.nav 
@@ -122,6 +128,26 @@ export const Navbar = () => {
               </motion.div>
             </AnimatePresence>
           </motion.button>
+
+          <motion.button 
+            className="logout-button desktop-only" 
+            onClick={handleLogout} 
+            aria-label="Log out"
+            style={{ 
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '8px'
+            }}
+            whileTap={{ scale: 0.85 }}
+            whileHover={{ scale: 1.1, color: 'var(--color-danger, #ef4444)' }}
+          >
+            <LogOut size={18} />
+          </motion.button>
           
           <motion.button 
             className="mobile-menu-btn mobile-only" 
@@ -175,6 +201,25 @@ export const Navbar = () => {
                   </motion.div>
                 );
               })}
+              
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: NAV_LINKS.length * 0.05, duration: 0.2 }}
+                style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}
+              >
+                <div 
+                  className="mobile-nav-link"
+                  onClick={() => {
+                    closeMenu();
+                    handleLogout();
+                  }}
+                  style={{ color: 'var(--color-danger, #ef4444)', cursor: 'pointer' }}
+                >
+                  <LogOut size={20} />
+                  <span>Log Out</span>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         )}

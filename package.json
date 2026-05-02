@@ -1,7 +1,7 @@
 {
-  "name": "eatwise",
-  "private": true,
-  "version": "0.0.0",
+  "name": "eatwise-ai",
+  "version": "1.0.0",
+  "description": "An AI-powered nutrition tracker.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
-    "@tanstack/react-query": "^5.96.2",
+    "@supabase/supabase-js": "^2.105.1",
+    "@tanstack/react-query": "^5.100.8",
     "@zxing/browser": "^0.1.5",
     "framer-motion": "^12.38.0",
     "gsap": "^3.14.2",
