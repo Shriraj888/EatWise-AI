@@ -71,6 +71,21 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page" ref={containerRef}>
+      {/* ── Marketing Hero Slogan ── */}
+      <motion.div 
+        className="marketing-slogan-container"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
+        <h1 className="marketing-slogan-title">
+          Master Your Nutrition. <span className="gradient-text">Transform Your Health.</span>
+        </h1>
+        <p className="marketing-slogan-subtitle">
+          Your health is your greatest wealth. Let EatWise AI effortlessly decode your meals, track your wellness, and guide you towards a smarter, sustainable, and vibrant lifestyle.
+        </p>
+      </motion.div>
+
       {/* ── Hero Section ── */}
       <div className="dashboard-header-row">
         <GreetingCard
