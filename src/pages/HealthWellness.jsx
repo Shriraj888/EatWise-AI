@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import {
   Heart, Activity, Brain, Droplets, Droplet, Shield,
   Moon, CheckCircle2, AlertTriangle, Sparkles,
-  TrendingUp, Apple
+  TrendingUp, Apple, Plus, Minus, RefreshCw
 } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { Card, CardHeader, CardTitle, CardBody } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
+import { Button } from '../components/ui/Button';
 import useAppStore from '../store/useAppStore';
 import { calculateBMI } from '../utils/tdeeCalculator';
 import {
@@ -57,6 +58,7 @@ const HealthWellness = () => {
   const getMealsForDate = useAppStore((s) => s.getMealsForDate);
   const getWaterIntake = useAppStore((s) => s.getWaterIntake);
   const setWaterIntake = useAppStore((s) => s.setWaterIntake);
+  const refreshWaterIntake = useAppStore((s) => s.refreshWaterIntake);
   const wellnessCheckins = useAppStore((s) => s.wellnessCheckins);
   const addWellnessCheckin = useAppStore((s) => s.addWellnessCheckin);
   const streakDays = useAppStore((s) => s.streakDays);
@@ -66,6 +68,16 @@ const HealthWellness = () => {
   const todaysCheckin = wellnessCheckins[todayStr] || null;
   const todaysMeals = getMealsForDate(todayStr);
   const waterToday = getWaterIntake(todayStr);
+
+  const [isRefreshingWater, setIsRefreshingWater] = useState(false);
+
+  const handleRefreshWater = async () => {
+    if (isRefreshingWater) return;
+    setIsRefreshingWater(true);
+    await refreshWaterIntake();
+    toast.success('Hydration data synced');
+    setTimeout(() => setIsRefreshingWater(false), 500); // UI feel
+  };
 
   const [selectedMood, setSelectedMood] = useState(todaysCheckin?.mood || '');
   const [selectedSleep, setSelectedSleep] = useState(todaysCheckin?.sleep || '');
@@ -133,7 +145,12 @@ const HealthWellness = () => {
   };
 
   const handleWaterClick = (index) => {
-    setWaterIntake(index + 1, todayStr);
+    if (index + 1 === waterToday) {
+      // Toggle off if clicking the currently filled level
+      setWaterIntake(index, todayStr);
+    } else {
+      setWaterIntake(index + 1, todayStr);
+    }
   };
 
   // Streak count for the last 7 days
@@ -373,16 +390,45 @@ const HealthWellness = () => {
 
         {/* ── Hydration Tracker ── */}
         <Card className="hydration-card glass-panel">
-          <CardHeader>
+          <CardHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <CardTitle style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div className="hydration-icon-wrapper">
                 <Droplets size={20} />
               </div>
               Hydration Tracker
             </CardTitle>
-            <Badge className="hydration-badge" variant="neutral">
-              {waterToday} / {WATER_GOAL} Glasses
-            </Badge>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={handleRefreshWater}
+                style={{ width: '32px', height: '32px', padding: 0, marginRight: '4px' }}
+                aria-label="Refresh water intake"
+              >
+                <RefreshCw size={16} className={isRefreshingWater ? 'spin-icon' : ''} />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => setWaterIntake(Math.max(0, waterToday - 1), todayStr)}
+                style={{ width: '32px', height: '32px', padding: 0 }}
+                aria-label="Decrease water intake"
+              >
+                <Minus size={16} />
+              </Button>
+              <Badge className="hydration-badge" variant="neutral">
+                {waterToday} / {WATER_GOAL}
+              </Badge>
+              <Button 
+                variant="primary" 
+                size="icon" 
+                onClick={() => setWaterIntake(Math.min(WATER_GOAL, waterToday + 1), todayStr)}
+                style={{ width: '32px', height: '32px', padding: 0 }}
+                aria-label="Increase water intake"
+              >
+                <Plus size={16} />
+              </Button>
+            </div>
           </CardHeader>
           <CardBody>
             <div className="hydration-content">
@@ -391,7 +437,7 @@ const HealthWellness = () => {
                   className="hydration-progress-fill" 
                   initial={{ width: 0 }}
                   animate={{ width: `${(waterToday / WATER_GOAL) * 100}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </div>
               
@@ -407,7 +453,7 @@ const HealthWellness = () => {
                       onClick={() => handleWaterClick(i)}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      transition={{ delay: i * 0.02, duration: 0.2 }}
                     >
                       <Droplet 
                         size={22} 
@@ -417,6 +463,23 @@ const HealthWellness = () => {
                     </motion.button>
                   );
                 })}
+              </div>
+
+              <div className="hydration-stats-row">
+                <div className="hydration-stat-box">
+                  <div className="stat-icon"><Droplet size={18} /></div>
+                  <div className="stat-info">
+                    <span className="stat-label">Daily Volume</span>
+                    <span className="stat-value"><strong>{(waterToday * 0.25).toFixed(2)} L</strong> <small style={{ color: 'var(--color-text-secondary)', fontSize: '0.8rem' }}>/ {(WATER_GOAL * 0.25).toFixed(2)} L</small></span>
+                  </div>
+                </div>
+                <div className="hydration-stat-box">
+                  <div className="stat-icon"><Activity size={18} /></div>
+                  <div className="stat-info">
+                    <span className="stat-label">Hydration Level</span>
+                    <span className="stat-value"><strong>{Math.round(Math.min(waterToday / WATER_GOAL, 1) * 100)}%</strong></span>
+                  </div>
+                </div>
               </div>
 
               <div className="hydration-footer">

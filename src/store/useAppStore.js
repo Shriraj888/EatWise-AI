@@ -335,11 +335,11 @@ const useAppStore = create(
         if (userId) {
           try {
             const { error } = await supabase.from('water_intake').upsert({
-              user_id: userId,
-              date: dateKey,
-              glasses: glasses,
-              updated_at: new Date().toISOString()
-            }, { onConflict: 'user_id, date' });
+            user_id: userId,
+            date: dateKey,
+            glasses: glasses,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'user_id, date' });
             
             if (error) throw error;
           } catch (error) {
@@ -351,6 +351,25 @@ const useAppStore = create(
       getWaterIntake: (date) => {
         const dateKey = date || formatDateKey();
         return get().waterIntake[dateKey] || 0;
+      },
+
+      refreshWaterIntake: async () => {
+        const userId = get().userId;
+        if (!userId) return;
+        try {
+          const { data, error } = await supabase
+            .from('water_intake')
+            .select('date, glasses')
+            .eq('user_id', userId);
+            
+          if (error) throw error;
+          
+          if (data) {
+            get().setWaterIntakeData(data);
+          }
+        } catch (error) {
+          console.error('Failed to fetch water intake:', error);
+        }
       },
 
       /* ---- Streak Days ---- */
