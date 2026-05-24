@@ -330,4 +330,4 @@ Fix reported syntax, import, or React hook issues before deploying.
 
 ## License
 
-No license file is currently included in this repository.
+This project is open-source and licensed under the [MIT License](https://opensource.org/licenses/MIT). You are free to use, modify, and distribute the code in accordance with the terms of the license.
