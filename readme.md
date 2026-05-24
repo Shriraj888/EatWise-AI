@@ -1,247 +1,333 @@
-# EatWise AI 🥗
+# EatWise AI
 
 EatWise AI is a client-side nutrition and wellness tracker built with React and Vite. It helps users create a profile, calculate daily nutrition goals, log meals, analyze meals with AI, generate recipe ideas from available ingredients, and monitor wellness signals aligned with UN Sustainable Development Goal 3: Good Health and Well-Being.
 
-The application utilizes Supabase for secure backend capabilities, authentication, and persistent database storage. It leverages Open Food Facts for nutritional search capabilities and utilizes Google Gemini 2.5 Flash via Google AI Studio as the primary AI provider, with OpenRouter configured as a fallback provider for AI-powered nutrition analysis, recipe generation, and daily wellness insights.
+The app stores user data in the browser through `localStorage`, uses Open Food Facts for food search, and can call either Google Gemini or OpenRouter for AI-powered nutrition analysis, recipe generation, and daily insights.
 
----
+## Table of Contents
 
-## 🏗️ Architecture Diagram
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [How the App Works](#how-the-app-works)
+- [Data Persistence](#data-persistence)
+- [AI and API Services](#ai-and-api-services)
+- [Important Notes](#important-notes)
+- [Troubleshooting](#troubleshooting)
 
-The application follows a modern full-stack architecture using React on the frontend and Supabase as a Backend-as-a-Service, with Zustand for client state management and direct integrations with AI APIs.
+## Features
 
-```mermaid
-graph TD
-    subgraph Frontend App
-        UI[React UI Components]
-        Hooks[Custom React Hooks]
-        Store[Zustand Store]
-        Services[API & Supabase Services]
-        Utils[Calculators & Formatters]
-    end
+### Personalized onboarding
 
-    subgraph Backend & Database
-        SB[Supabase Auth & PostgreSQL API]
-    end
+- Collects basic profile data: name, age, weight, height, gender, activity level, goal, and optional health conditions.
+- Calculates daily calorie targets using the Mifflin-St Jeor equation.
+- Calculates macro goals for protein, carbohydrates, and fat based on the selected goal.
+- Blocks access to the main app until the required profile fields are complete.
 
-    subgraph External APIs
-        OFF[Open Food Facts API]
-        Gemini[Google Gemini 2.5 Flash API]
-        OR[OpenRouter API]
-    end
+### Dashboard
 
-    UI --> Hooks
-    Hooks --> Store
-    Hooks --> Services
-    UI --> Utils
-    
-    Store <-->|Sync App State| SB
-    Services <-->|Data & Auth| SB
-    
-    Services -->|Food Search| OFF
-    Services -->|Primary AI| Gemini
-    Services -->|Fallback AI| OR
-```
+- Shows a daily nutrition overview.
+- Displays calorie progress and macro progress.
+- Provides AI-generated daily nutrition insights.
+- Shows today's logged meals.
+- Includes quick navigation to meal logging, AI analysis, recipes, and wellness.
+- Tracks weekly activity/streak indicators.
 
----
+### Meal logging
 
-## 🔄 Data Flow Diagram
+- Logs meals by date.
+- Supports meal type, calories, protein, carbs, fat, and notes.
+- Allows editing and deleting meal entries.
+- Includes Open Food Facts search to autofill nutrition data.
 
-Below is the data flow for the core AI Meal Analysis and Logging feature.
+### AI meal analyzer
 
-```mermaid
-sequenceDiagram
-    actor User
-    participant UI as React Component
-    participant AI as AI Provider Service
-    participant Store as Zustand Store
-    participant SB as Supabase DB
+- Accepts a meal image or text description.
+- Estimates calories and macros.
+- Produces a health score, health badge, suggestions, and health impact note.
+- Can add AI-analyzed meals directly to the meal log.
 
-    User->>UI: Uploads food photo / enters description
-    UI->>AI: send payload (Base64 Image / Text)
-    note right of AI: Routes to Gemini 2.5 Flash (or OpenRouter fallback)
-    AI-->>UI: Returns detailed JSON (Macros, Calories, Health Score)
-    UI-->>User: Displays Analysis Results & Suggestions
-    
-    User->>UI: Clicks "Add to Meal Log"
-    UI->>Store: action: logMeal(mealObject)
-    Store->>SB: Insert meal record via Supabase client
-    SB-->>Store: Confirm successful insertion
-    Store-->>UI: Global state updated
-    UI-->>User: Dashboard visualizes new macro progress
-```
+### Recipe suggester
 
----
+- Generates healthy recipes from user-entered ingredients.
+- Supports dietary filters.
+- Returns recipe steps, estimated nutrition, prep/cook time, and health benefits.
+- Lets users save and remove favorite recipes.
 
-## 🌍 Alignment with UN SDG 3 (Good Health and Well-Being)
+### Health and wellness hub
 
-EatWise AI is directly aligned with the United Nations Sustainable Development Goal 3, which aims to **ensure healthy lives and promote well-being for all at all ages**. Our platform contributes to this global objective by:
-- **Promoting Preventive Healthcare:** By calculating daily nutritional needs and providing strict macro tracking, the app aids in managing weight and reducing the risk of diet-related non-communicable diseases (NCDs) like diabetes and heart disease.
-- **Democratizing Nutrition Knowledge:** The AI Meal Analyzer empowers users with actionable insights and nutritional literacy, making it easier for communities to make informed, healthy dietary choices.
-- **Encouraging Holistic Wellness:** Beyond mere calorie counting, EatWise focuses on overall holistic health. By tracking hydration, mental mood, sleep patterns, and physical health markers (like BMI), it provides a comprehensive Wellness Score to users.
+- Calculates BMI and displays health-risk categories.
+- Tracks daily hydration.
+- Tracks mood and sleep quality.
+- Computes a wellness score from BMI, meals, water intake, mood, and sleep.
+- Includes nutrition-focused non-communicable disease prevention tips.
+- Explains how the app supports SDG 3 goals.
 
----
+### Theme support
 
-## ✨ Features
+- Includes theme state in the app store.
+- Theme preference is persisted with the rest of app state.
 
-### 👤 Personalized Onboarding & Profiling
-- Collects detailed physiological and lifestyle metrics (age, weight, height, gender, activity level, and goals).
-- Uses the clinically validated **Mifflin-St Jeor equation** to calculate daily basal metabolic rate (BMR) and recommended calorie limits.
-- Tailors specific macronutrient (protein, carbs, fat) partitions based on the user's primary goal (losing, maintaining, or gaining weight).
+## Tech Stack
 
-### 📊 Dynamic Dashboard
-- **Nutrition Overview:** Vivid visual representations showing current day's calorie expenditure and macronutrient progress.
-- **Daily AI Insights:** Generates fresh, context-aware daily nutritional insights driven by AI relying on user's profile and habits.
-- **Activity Tracking:** Maps weekly streaks and provides rapid navigation to core features like meal logging, recipes, and wellness checkpoints.
-- Maintains a ledger of today's logged meals for instant review.
+- React 19
+- Vite 8
+- React Router
+- TanStack React Query
+- Zustand with persistence middleware
+- Framer Motion
+- GSAP
+- Recharts
+- Lucide React
+- React Hot Toast
+- Open Food Facts API
+- Google Gemini API
+- OpenRouter API
 
-### 📝 Comprehensive Meal Logging
-- Allows users to log distinct meals by exact dates (breakfast, lunch, dinner, snacks).
-- Tightly integrated with the **Open Food Facts API** to search and automatically pull precise nutritional information based on barcodes and product names.
-- Users can append custom calorie metrics, macros, and personal notes to individual entries.
-- Full CRUD capabilities: easily track, edit, and delete food entries.
-
-### 🤖 AI Meal Analyzer
-- **Multi-modal Inputs:** Accepts both photographic images of a meal and detailed textual descriptions.
-- **Nutritional Demystification:** Harnesses AI (Gemini 2.5 Flash / OpenRouter) to estimate calorie counts and intricate macro ratios.
-- **Health Scoring:** Grades meals and provides a synthesized health score alongside specific health badges.
-- **Actionable Feedback:** Supplies tailored, human-readable suggestions explaining the tangible health impacts of the food scanned. Can add these interpreted meals directly into your local Meal Log.
-
-### 🍲 Smart Recipe Suggester
-- AI-driven feature generating healthy, step-by-step recipes utilizing whatever ingredients the user inputs.
-- Highly filterable by dietary restrictions/preferences (e.g., Vegan, Keto, Gluten-Free).
-- Returns comprehensive culinary data: cooking instructions, preparation/cooking times, estimated nutritional breakdown, and active health benefits.
-- Favorites system allowing users to safely tuck away preferred recipes for later usage.
-
-### 🧘‍♀️ Health & Wellness Hub
-- **BMI Tools:** Automatically calculates Body Mass Index and projects immediate health-risk categories.
-- **Micro-Habit Tracking:** Incorporates hydration logging, mood surveying, and sleep quality diaries.
-- **Holistic Wellness Score:** Aggregates BMI, logged meals accuracy, water intake, sleep quality, and mood to deliver a singular unified metric illustrating the user's total health status.
-- Educates users with practical, nutrition-focused tips tailored against non-communicable diseases prevention.
-
-### 🌗 Adaptive UI & Accessibility
-- Complete Light/Dark mode theming options persisted in user settings.
-- Highly interactive UI relying on Framer Motion and GSAP for fluid data transitions.
-
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** React 19, Vite 8
-- **Backend & Database:** Supabase (PostgreSQL, Auth)
-- **Routing:** React Router
-- **State Management:** Zustand
-- **Data Fetching:** TanStack React Query
-- **Animations:** Framer Motion, GSAP
-- **Data Visualization:** Recharts
-- **Icons & UI:** Lucide React, React Hot Toast
-- **External Services:** 
-  - Open Food Facts API
-  - Google Gemini 2.5 Flash API (Primary)
-  - OpenRouter API (Fallback Provider)
-
----
-
-## 🗄️ Backend Structure (Supabase)
-
-Our backend utilizes a robust relational PostgreSQL database hosted on Supabase, designed with strict Row Level Security (RLS) to ensure user data isolation.
-
-The primary database schema consists of the following tables:
-- **`profiles`**: Stores core user metrics (age, weight, height, gender), activity levels, dietary goals (lose, maintain, build), computed calorie/macro limits, and health conditions. Joined directly to `auth.users(id)`.
-- **`meals`**: The ledger for nutritional tracking. Records date, meal type (breakfast, lunch, dinner, snack), calories, precise macros (protein, carbs, fat), and optional health badges/notes.
-- **`favorites`**: A repository of AI-generated recipes the user saves, tracking prep/cook times, difficulty, ingredients, step-by-step instructions, and macros.
-- **`water_intake`**: Tracks glasses of water consumed per user per day.
-- **`wellness_checkins`**: Directly supports our SDG 3 tracking by recording daily `mood` and `sleep_quality` metrics linked to the user and date.
-- **`streak_days`**: Maintains the user's activity streak markers.
-- **`ai_analysis_logs`**: An audit trail storing AI nutritional evaluations (both image and text-based) and the subsequent health impact suggestions provided.
-
-*All tables are indexed appropriately for quick `date` and `user_id` lookups and strictly protected via RLS policies so users can only `SELECT/INSERT/UPDATE/DELETE` their own rows using `auth.uid()` validation.*
-
----
-
-## 📂 Project Structure
+## Project Structure
 
 ```text
 EatWise AI/
-  public/            # Static assets (favicons, reference images)
+  public/
+    favicon.svg
+    icons.svg
+    reference 1.jpg
+    reference 2.jpg
   src/
-    assets/          # Image and graphic assets
-    components/      # Reusable UI components
-      auth/          # Auth styles and layout
-      dashboard/     # Dashboard widgets and charts
-      layout/        # App shell and navigation
-      meals/         # Meal form and food search workflow
-      ui/            # Reusable UI primitives (Buttons, Cards, Modals)
-    hooks/           # React Query and custom logic hooks
-    pages/           # Route-level screens (Dashboard, MealLog, AIAnalyzer, etc.)
-    services/        # External API services (Gemini, OpenRouter, Food Facts)
-    store/           # Global Zustand store
-    utils/           # Constants, formatters, TDEE calculators, validators
-    App.jsx          # Routes, context providers, and onboarding guard
-    main.jsx         # React application entry point
-
+    assets/
+      hero.png
+    components/
+      dashboard/       Dashboard widgets and charts
+      layout/          App shell and navigation
+      meals/           Meal form and food search workflow
+      ui/              Reusable UI primitives
+    hooks/             React Query and app-specific hooks
+    pages/             Route-level screens
+    services/          AI, API, and configuration services
+    store/             Zustand app store
+    utils/             Constants, formatters, validators, calculators
+    App.jsx            Routes, providers, and onboarding guard
+    main.jsx           React entry point
+  .env.example
+  package.json
+  vite.config.js
 ```
 
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js (Latest LTS version recommended)
-- npm or yarn
+
+Install Node.js and npm. This project is a Vite app, so a recent active Node.js release is recommended.
 
 ### Installation
-1. Clone the repository and install dependencies:
+
 ```bash
 npm install
 ```
 
-2. **Configure environment variables:**
+### Configure environment variables
+
 Create a `.env` file in the project root:
+
 ```bash
 cp .env.example .env
 ```
-Add your API keys and Supabase credentials inside `.env`:
+
+Then add at least one AI provider key:
+
 ```env
-VITE_SUPABASE_URL="your_supabase_project_url"
-VITE_SUPABASE_ANON_KEY="your_supabase_anon_key"
 VITE_GEMINI_API_KEY="your_gemini_api_key_here"
 VITE_OPENROUTER_API_KEY="your_openrouter_api_key_here"
 ```
-*(Note: For AI, only one key is strictly required. If both are provided, Gemini 2.5 Flash serves as the primary and OpenRouter as the fallback).*
 
-### Available Scripts
+The app can run with only one of these keys. If both are provided, Gemini is tried first and OpenRouter is used as a fallback.
 
-- **`npm run dev`** - Starts the Vite development server on `http://localhost:5173`.
-- **`npm run build`** - Creates a production build in the `dist/` directory.
-- **`npm run preview`** - Serves the production build locally for verification.
-- **`npm run lint`** - Lints the project files using ESLint.
+### Start the development server
 
----
+```bash
+npm run dev
+```
 
-## 💾 Data Persistence & Security
+Vite will print a local URL, usually:
 
-**Supabase Backend Integration:**  
-Instead of local storage, user profiles, logs, and preferences are securely persisted using a Supabase PostgreSQL database. The application interacts with Supabase services natively to authenticate users and ensure their data is synced seamlessly across devices.
+```text
+http://localhost:5173
+```
 
-**Important Considerations:**
-- Because this is a frontend-side Vite application, variables prefixed with `VITE_` are bundled and visible natively. For production, ensure Supabase RLS (Row Level Security) policies are properly enforced to protect user data from unauthorized access via the public API key.
-- Evaluated nutrition responses from AI are estimates and should not be perceived as definitive medical advice.
+Open that URL in your browser.
 
----
+## Environment Variables
 
-## 🔧 Troubleshooting
+| Variable | Required | Description |
+| --- | --- | --- |
+| `VITE_GEMINI_API_KEY` | Optional if OpenRouter is configured | Google Gemini API key used for meal analysis, recipes, and insights. |
+| `VITE_OPENROUTER_API_KEY` | Optional if Gemini is configured | OpenRouter API key used as an AI provider or fallback provider. |
 
-- **App stuck loading or authorization failing?** 
-  Ensure your Supabase project is active, your `.env` contains valid credentials, and Row Level Security policies permit reads/writes where appropriate.
-- **AI features failing with authorization error?** 
-  Verify your `.env` starts with `VITE_` and contains a valid token. Restart the Vite watcher via `npm run dev` anytime `.env` variables are modified.
-- **No recipes/food found?** 
-  Try simpler ingredient terminology. The AI relies on logical inputs and Open Food Facts depends on global crowdsourced inputs.
+Because this is a frontend-only Vite app, variables prefixed with `VITE_` are exposed to the browser bundle. For production, use restricted API keys where possible or route AI calls through a backend proxy.
 
----
+## Available Scripts
 
-## 📜 License
+```bash
+npm run dev
+```
 
-This project is open-source and licensed under the [MIT License](https://opensource.org/licenses/MIT). You are free to use, modify, and distribute the code in accordance with the terms of the license.
+Starts the Vite development server.
 
+```bash
+npm run build
+```
+
+Creates a production build in `dist/`.
+
+```bash
+npm run preview
+```
+
+Serves the production build locally for preview.
+
+```bash
+npm run lint
+```
+
+Runs ESLint against the project.
+
+## How the App Works
+
+### Routing
+
+Routes are defined in `src/App.jsx`.
+
+| Path | Screen |
+| --- | --- |
+| `/` | Dashboard |
+| `/meals` | Meal Log |
+| `/analyzer` | AI Meal Analyzer |
+| `/recipes` | Recipe Suggester |
+| `/wellness` | Health and Wellness |
+| `/profile` | Profile |
+
+`OnboardingGuard` checks the persisted user profile before rendering the main layout. If the profile is incomplete, the onboarding screen is shown instead.
+
+### State management
+
+The main app state lives in `src/store/useAppStore.js`.
+
+It stores:
+
+- User profile and calculated goals
+- Meal logs keyed by date
+- Favorite recipes
+- Water intake keyed by date
+- Streak days
+- Wellness check-ins
+- Theme preference
+
+### Nutrition calculations
+
+Nutrition goal helpers live in `src/utils/tdeeCalculator.js`.
+
+- BMR is calculated with the Mifflin-St Jeor equation.
+- TDEE is calculated from BMR and selected activity level.
+- Calorie goals are adjusted for the selected user goal.
+- Macro goals are split differently for losing, maintaining, or building weight.
+- BMI is calculated from weight and height.
+
+### Food search
+
+Food search is handled by:
+
+- `src/hooks/useFoodSearch.js`
+- `src/services/foodFactsService.js`
+
+The app queries Open Food Facts, normalizes the results, and uses per-100g nutrition values when available.
+
+### AI calls
+
+AI routing is handled by `src/services/aiProvider.js`.
+
+The app:
+
+1. Checks whether Gemini and/or OpenRouter keys are configured.
+2. Converts uploaded images to base64 when needed.
+3. Calls Gemini first if available.
+4. Falls back to OpenRouter if Gemini fails and an OpenRouter key exists.
+5. Extracts JSON from AI responses before passing data back to the UI.
+
+Meal analysis prompts live in `src/services/geminiService.js`.
+Recipe and daily insight prompts live in `src/services/openRouterService.js`.
+
+## Data Persistence
+
+EatWise AI currently uses Zustand's `persist` middleware with the storage key:
+
+```text
+eatwise-storage
+```
+
+This means data is stored locally in the user's browser. There is no server-side database in the current project.
+
+To reset local data during development:
+
+1. Open browser developer tools.
+2. Go to Application or Storage.
+3. Find Local Storage for the app origin.
+4. Delete the `eatwise-storage` key.
+
+## Important Notes
+
+- Nutrition values generated by AI are estimates and should not be treated as medical advice.
+- The wellness content is educational and does not replace advice from a qualified health professional.
+- API keys in a Vite frontend are visible to users of the deployed app.
+- Open Food Facts nutrition values depend on public product data and may be incomplete or inconsistent.
+- This project is currently frontend-only and does not include authentication, user accounts, or cloud sync.
+
+## Troubleshooting
+
+### The app shows onboarding every time
+
+Check whether `localStorage` is being cleared by the browser or by privacy settings. The profile is stored in `eatwise-storage`.
+
+### AI features fail with an API key error
+
+Check that `.env` exists in the project root and that at least one of these variables is set:
+
+```env
+VITE_GEMINI_API_KEY="..."
+VITE_OPENROUTER_API_KEY="..."
+```
+
+After changing `.env`, restart the Vite development server.
+
+### AI responses fail to parse
+
+The app expects AI providers to return valid JSON. Retry the request. If the issue persists, inspect the prompt and response in the browser console.
+
+### Food search returns no results
+
+Open Food Facts may not have data for every product or search term. Try a more common food name or brand name.
+
+### Production build fails
+
+Run linting and inspect the reported files:
+
+```bash
+npm run lint
+npm run build
+```
+
+Fix reported syntax, import, or React hook issues before deploying.
+
+## Development Notes
+
+- Keep shared state changes inside `src/store/useAppStore.js`.
+- Keep external API logic inside `src/services/`.
+- Keep reusable UI primitives inside `src/components/ui/`.
+- Add new route pages under `src/pages/` and register them in `src/App.jsx`.
+- Keep AI prompts strict about JSON output so UI parsing remains reliable.
+
+## License
+
+No license file is currently included in this repository.
